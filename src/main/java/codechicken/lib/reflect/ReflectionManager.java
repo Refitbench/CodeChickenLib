@@ -1,8 +1,8 @@
 package codechicken.lib.reflect;
 
-import com.cleanroommc.hackery.ReflectionHackery;
 import net.minecraftforge.common.util.EnumHelper;
 import org.objectweb.asm.Type;
+import zone.rong.imaginebreaker.Index;
 
 import java.lang.reflect.*;
 
@@ -234,7 +234,7 @@ public class ReflectionManager {
     public static <R> R getField(ObfMapping mapping, Object instance, Class<R> clazz) {
         try {
             Field field = getField(mapping);
-            return (R) ReflectionHackery.getField(field, instance);
+            return (R) Index.get().get(instance, field);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -286,7 +286,8 @@ public class ReflectionManager {
         }
 
         try {
-            ReflectionHackery.stripFieldOfFinalModifier(field);
+            Index.get().enableFinalFieldMutation();
+            field.setAccessible(true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
